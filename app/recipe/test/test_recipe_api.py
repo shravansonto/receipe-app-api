@@ -13,7 +13,7 @@ from recipe.serializers import RecipeSerializer, RecipeDetailSerializer
 RECIPE_URL=reverse('recipe:recipe-list')
 
 def detail_url(recipe_id):
-    return reverse(RECIPE_URL, args=(recipe_id,))
+    return reverse(RECIPE_URL, args=[recipe_id])
 
 def create_recipe(user, **params):
 
