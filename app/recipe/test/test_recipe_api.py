@@ -8,9 +8,12 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
 from core.models import Recipe
-from recipe.serializers import RecipeSerializer
+from recipe.serializers import RecipeSerializer, RecipeDetailSerializer
 
 RECIPE_URL=reverse('recipe:recipe-list')
+
+def detail_url(recipe_id):
+    return reverse(RECIPE_URL, args=(recipe_id,))
 
 def create_recipe(user, **params):
 
@@ -26,15 +29,16 @@ def create_recipe(user, **params):
     recipe = Recipe.objects.create(user=user, **default)
     return recipe
 
-class PublicRecipeApiTest(TestCase):
+class PublicRecipeAPITests(TestCase):
+    """Test unauthenticated API requests."""
 
     def setUp(self):
-
         self.client = APIClient()
 
     def test_auth_required(self):
-
+        """Test auth is required to call API."""
         res = self.client.get(RECIPE_URL)
+
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 class PrivateRecipeApiTest(TestCase):
@@ -75,5 +79,17 @@ class PrivateRecipeApiTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         self.assertEqual(res.data, serializers.data)
+
+    def test_get_recipe_detail(self):
+
+        recipe = create_recipe(user=self.user)
+
+        url = detail_url(recipe.id)
+
+        res = self.client.get(url)
+
+        serializer = RecipeDetailSerializer(recipe)
+
+        self.assertEqual(res.data, serializer.data)
 
 
