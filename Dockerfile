@@ -24,9 +24,9 @@ RUN python -m venv /py && \
         --disabled-password \
         --no-create-home \
         django-user && \
-    mkdir -p /vol/web/meida && \
+    mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
-    chown django-user:django-user /vol/web/ && \
+    chown django-user:django-user /vol && \
     chmod -R 755 /vol && \
     chmod -R + /scripts
 
