@@ -4,6 +4,7 @@ services:
   app:
     build:
       context: .
+    restart: always
     volumes:
       - static-data:/vol/web
     environment:
@@ -18,8 +19,9 @@ services:
 
   db:
     image: postgres:13-alpine
+    restart: always
     volumes:
-      - postgres-data:/vol/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
@@ -28,6 +30,7 @@ services:
   proxy:
     build:
       context: ./proxy
+    restart: always
     depends_on:
       - app
     ports:
